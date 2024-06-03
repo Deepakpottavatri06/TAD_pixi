@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Application,
-  Assets,
-  Sprite,
-  Text,
-  TextStyle,
-  Graphics,
-} from "pixi.js";
+import { Application, Assets, Sprite, Text, TextStyle, Graphics } from "pixi.js";
 import data from "../cordinates.json";
 import data1 from "../newcor.json";
 // import { Graphics } from '@pixi/react';
@@ -25,22 +18,26 @@ export default function Game3() {
       appRef.current = app;
 
       let screenSize = {};
-      if (window.innerHeight < window.innerWidth) {
-        screenSize = {
-          width: window.innerHeight * (4 / 3),
-          height: window.innerHeight * 0.8,
-        };
-      } else {
-        screenSize = {
-          width: window.innerWidth * 0.9,
-          height: window.innerWidth * (3 / 4) * 0.8,
-        };
+      // if (window.innerHeight < window.innerWidth) {
+      //   screenSize = {
+      //     width: (window.innerHeight * (4 / 3)),
+      //     height: window.innerHeight * 0.8
+      //   };
+      // } else {
+      //   screenSize = {
+      //     width: window.innerWidth * 0.9,
+      //     height: window.innerWidth * (3 / 4) * 0.8
+      //   };
+      // }
+      screenSize = {
+        width: Math.min(window.innerHeight * (5 / 4), window.innerWidth * 0.9) ,
+        height: Math.min(window.innerHeight * 0.8, window.innerWidth * (3/4) * 0.75)
       }
       await app.init({
         // background: "#000",
         antialias: true,
         canvas: document.getElementById("board"),
-        ...screenSize,
+        ...screenSize
       });
 
       const texture = await Assets.load("threads.jpg");
@@ -54,7 +51,7 @@ export default function Game3() {
       sprite.scale = scalingFactor;
       const Padding = {
         x: (app.screen.width - sprite.width) / 2,
-        y: (app.screen.height - sprite.height) / 2,
+        y: (app.screen.height - sprite.height) / 2
       };
       sprite.x = Padding.x;
       sprite.y = Padding.y;
@@ -97,8 +94,8 @@ export default function Game3() {
             fontFamily: "Arial",
             fontSize: 24 * scalingFactor,
             fill: "#000",
-            align: "center",
-          }),
+            align: "center"
+          })
         });
 
         const rightText = new Text({
@@ -107,8 +104,8 @@ export default function Game3() {
             fontFamily: "Arial",
             fontSize: 24 * scalingFactor,
             fill: "#000",
-            align: "center",
-          }),
+            align: "center"
+          })
         });
 
         // const xLeft = data.left[index].x * 2 + (1280 - 1000) / 2 - 20;
@@ -165,7 +162,6 @@ export default function Game3() {
         app.stage.addChild(rightText);
       }
 
-      
       const handleclick = (Graphics) => {
         stack.push(Graphics);
         if (stack.length === 1) {
@@ -174,12 +170,21 @@ export default function Game3() {
           if (stack[1].display === stack[0].display) {
             Graphics.tint = "#FF0000";
             stack[0].tint = "#FF0000";
-
+            
+            
             color(stack[0]);
             color(stack[1]);
             stack.pop();
             stack.pop();
           } else if (Graphics.index === stack[0].index) {
+            confetti({
+                particleCount: 600,
+                spread: 90,
+                decay: 0.95,
+                scalar: 1.5,
+                ticks: 150,
+                origin: { y: 0.9 },
+            });
             Graphics.tint = "#00FF00";
             stack[0].tint = "#00FF00";
             Graphics.interactive = false;
@@ -208,7 +213,7 @@ export default function Game3() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "98vh",
+        height: "98vh"
       }}
     >
       <canvas id="board"></canvas>
